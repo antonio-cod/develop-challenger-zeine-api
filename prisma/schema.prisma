@@ -11,18 +11,28 @@ enum UserRole {
   sale
 }
 
-
 model User {
-  id String @id @default(uuid())
-  name String
-  email String
+  id       String @id @default(uuid())
+  name     String
+  email    String
   password String
 
   role UserRole @default(sale)
 
-  createdAt DateTime @default(now()) @map("created_at")
+  createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
+model Product {
+  id          String  @id @default(uuid())
+  name        String
+  price       Decimal @db.Decimal(10, 2)
+  description String
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("products")
+}
