@@ -7,7 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+enum UserRole {
+  sale
+}
 
 
 model User {
@@ -15,6 +17,8 @@ model User {
   name String
   email String
   password String
+
+  role UserRole @default(sale)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
