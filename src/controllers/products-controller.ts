@@ -1,40 +1,45 @@
+import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { Request, Response } from "express";
-import { prisma } from "@/database/prisma";
-import { hash } from "bcrypt";
+
 import { z, ZodError } from "zod";
 
 class ProductsController {
   async create(request: Request, response: Response) {
     try {
       const bodySchema = z.object({
-       title: z.string().trim().min(3, { message: "Nome é obrigatório" }),
-        price: z.string(),
-  
-        
+        name: z.string().trim().min(3, { message: "Nome é obrigatório" }),
+        price: z.coerce.number()
+          .positive({ message: "O preço deve ser um número positivo e no maximo 10 digitos" }),
+        description: z
+          .string()
+          .min(5, { message: "Descrição é obrigatória" })
+          .max(255, { message: "Descrição deve ter no máximo 255 caracteres" }),
+
+
       });
 
-      const { name, email, password } = bodySchema.parse(request.body);
+      const { name, price, description } = bodySchema.parse(request.body);
 
-      const userWithSameEmail = await prisma.user.findFirst({ where: { email } });
+      const productWithSameName = await prisma.product.findFirst({ where: { name } });
 
-      if (userWithSameEmail) {
-        throw new AppError("Já existe um usuário com esse mesmo E-mail!");
+      if (productWithSameName) {
+        throw new AppError("Já existe um produto com este nome!");
       }
 
-      const hashedPassword = await hash(password, 8);
+    
 
-      const user = await prisma.user.create({
+      const product = await prisma.product.create({
         data: {
           name,
-          email,
-          password: hashedPassword,
+          price,
+           description
         },
       });
 
-      const { password: _, ...userWithoutPassword } = user;
+   
 
-      return response.status(201).json(userWithoutPassword);
+      return response.status(201).json(product);
 
     } catch (error) {
       if (error instanceof ZodError) {
@@ -48,7 +53,7 @@ class ProductsController {
         });
       }
 
-      
+
       throw error;
     }
   }
