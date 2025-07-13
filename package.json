@@ -9,7 +9,7 @@
   "author": "Antonio Carlos da Cruz",
   "description": "Desafio Técnico | Marketplace - Painel do Vendedor",
   "dependencies": {
-    "@prisma/client": "^5.19.1",
+    "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
