@@ -31,10 +31,26 @@ model Product {
   price       Decimal @db.Decimal(10, 2)
   description String
 
-  // ativo Boolean @default(true)
+  active Boolean @default(true)
 
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  categoryId String
+  category Category @relation(fields: [categoryId], references: [id])
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
 
   @@map("products")
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String
+
+  active Boolean @default(true)
+
+  Product   Product[]
+
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  @@map("categories")
 }
