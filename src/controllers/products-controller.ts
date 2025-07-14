@@ -15,12 +15,13 @@ class ProductsController {
           .string()
           .min(5, { message: "Descrição é obrigatória" })
           .max(255, { message: "Descrição deve ter no máximo 255 caracteres" }),
-          categoryId: z.string()
+          categoryId: z.string(),
+          filename: z.string().min(20),
 
 
       });
 
-      const { name, price, description, categoryId } = bodySchema.parse(request.body);
+      const { name, price, description, categoryId, filename } = bodySchema.parse(request.body);
 
       const productWithSameName = await prisma.product.findFirst({ where: { name } });
 
@@ -35,7 +36,8 @@ class ProductsController {
           name,
           price,
            description,
-           categoryId
+           categoryId,
+           filename,
         },
       });
 
