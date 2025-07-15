@@ -61,6 +61,28 @@ class ProductsController {
       throw error;
     }
   }
+
+  async index(request: Request, response: Response) {
+  try {
+    const products = await prisma.product.findMany({
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        name: 'asc', // opcional: ordena por data de criação
+      },
+    });
+
+    return response.json(products);
+  } catch (error) {
+    return response.status(500).json({ message: "Erro ao listar produtos." });
+  }
+}
 }
 
 export { ProductsController };

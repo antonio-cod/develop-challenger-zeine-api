@@ -12,10 +12,12 @@ enum UserRole {
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   name     String
   email    String
   password String
+  phone    Decimal
+  filename String?
 
   role UserRole @default(sale)
 
