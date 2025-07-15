@@ -16,9 +16,16 @@ class UsersController {
         password: z
           .string()
           .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
+        filename: z.string(),
+        phone: z
+          .string()
+          .trim()
+          .min(9, { message: "Telefone deve ter no mínimo 8 dígitos" })
+          .max(11, { message: "Telefone deve ter no máximo 10 dígitos" })
+          .regex(/^\d+$/, { message: "Telefone deve conter apenas números" })
       });
 
-      const { name, email, password } = bodySchema.parse(request.body);
+      const { name, email, password, filename, phone } = bodySchema.parse(request.body);
 
       const userWithSameEmail = await prisma.user.findFirst({ where: { email } });
 
@@ -32,6 +39,8 @@ class UsersController {
         data: {
           name,
           email,
+          phone,
+          filename, 
           password: hashedPassword,
         },
       });
@@ -52,7 +61,7 @@ class UsersController {
         });
       }
 
-      
+
       throw error;
     }
   }
